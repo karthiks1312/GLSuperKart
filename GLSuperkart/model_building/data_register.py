@@ -3,7 +3,7 @@ from huggingface_hub import HfApi, create_repo
 import os
 
 REPO_ID = os.getenv("HF_REPO_ID")
-PROJECT_NAME = os.getenv("PROJECT_NAME")
+PROJECT_NAME = "GLSuperkart"
 
 repo_name=f"{PROJECT_NAME}"
 
