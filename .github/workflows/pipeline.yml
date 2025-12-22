@@ -1,0 +1,93 @@
+name: GLSuperCart Project Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Automatically triggers on push to the main branch
+
+jobs:
+
+  register-dataset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run:  pip install -r GLSuperKart/requirements.txt
+      - name: Upload Dataset to Hugging Face Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          NGROK: ${{ secrets.NGROK }}
+          EMAIL_ADD: ${{ secrets.EMAIL_ADD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          TOKEN: ${{ secrets.TOKEN }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          REPO_ID: ${{ secrets.REPO_ID }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID }}
+        run: python GLSuperKart/model_building/data_register.py
+
+  data-prep:
+    needs: register-dataset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run:  pip install -r GLSuperKart/requirements.txt
+      - name: Run Data Preparation
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          NGROK: ${{ secrets.NGROK }}
+          EMAIL_ADD: ${{ secrets.EMAIL_ADD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          TOKEN: ${{ secrets.TOKEN }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          REPO_ID: ${{ secrets.REPO_ID }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID }}
+        run: python SuperKart/model_building/prep.py
+
+
+  model-traning:
+    needs: data-prep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run:  pip install -r GLSuperKart/requirements.txt
+      - name: Start MLflow Server
+        run: |
+          nohup mlflow ui --host 0.0.0.0 --port 5000 &  # Run MLflow UI in the background
+          sleep 5  # Wait for a moment to let the server starts
+      - name: Model Building
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          NGROK: ${{ secrets.NGROK }}
+          EMAIL_ADD: ${{ secrets.EMAIL_ADD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          TOKEN: ${{ secrets.TOKEN }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          REPO_ID: ${{ secrets.REPO_ID }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID }}
+        run: python GLSuperKart/model_building/train.py
+
+
+  deploy-hosting:
+    runs-on: ubuntu-latest
+    needs: [model-traning,data-prep,register-dataset]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run:  pip install -r GLSuperKart/requirements.txt
+      - name: Push files to Frontend Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          NGROK: ${{ secrets.NGROK }}
+          EMAIL_ADD: ${{ secrets.EMAIL_ADD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          TOKEN: ${{ secrets.TOKEN }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          REPO_ID: ${{ secrets.REPO_ID }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
+          HF_REPO_ID: ${{ secrets.HF_REPO_ID }}
+        run: python GLSuperKart/hosting/hosting.py
