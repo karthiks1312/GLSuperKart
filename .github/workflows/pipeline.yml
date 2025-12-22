@@ -44,7 +44,7 @@ jobs:
           REPO_ID: ${{ secrets.REPO_ID }}
           REPO_NAME: ${{ secrets.REPO_NAME }}
           HF_REPO_ID: ${{ secrets.HF_REPO_ID }}
-        run: python SuperKart/model_building/prep.py
+        run: python Superkart/model_building/prep.py
 
 
   model-traning:
