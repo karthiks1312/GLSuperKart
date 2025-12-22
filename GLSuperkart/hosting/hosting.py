@@ -31,7 +31,7 @@ except RepositoryNotFoundError:
 # Upload app files
 # -------------------------------
 
-upload_path = f"{PROJECT_NAME}/deployment"
+upload_path = "GLSuperkart/deployment"
 
 api.upload_folder(
     folder_path=upload_path,
