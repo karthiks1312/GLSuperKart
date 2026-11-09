@@ -51,19 +51,20 @@ based on product characteristics and store attributes.
 
 product_sugar_content = st.selectbox("Product Sugar Content", ["Low Sugar", "Regular", "No Sugar"])
 product_type = st.selectbox("Product Type", [
-    "Dairy", "Soft Drinks", "Meat", "Fruits and Vegetables",
-    "Baking Goods", "Frozen Foods", "Health and Hygiene",
-    "Canned", "Household", "Snack Foods", "Others"
+    "Baking Goods", "Breads", "Breakfast", "Canned", "Dairy",
+    "Frozen Foods", "Fruits and Vegetables", "Hard Drinks",
+    "Health and Hygiene", "Household", "Meat", "Others", "Seafood",
+    "Snack Foods", "Soft Drinks", "Starchy Foods"
 ])
-store_id = st.selectbox("Store ID", ["OUT001", "OUT002", "OUT003", "OUT004", "OUT005"])
+store_id = st.selectbox("Store ID", ["OUT001", "OUT002", "OUT003", "OUT004"])
 store_size = st.selectbox("Store Size", ["Small", "Medium", "High"])
 store_city_type = st.selectbox("Store Location City Type", ["Tier 1", "Tier 2", "Tier 3"])
-store_type = st.selectbox("Store Type", ["Grocery Store", "Supermarket Type1", "Supermarket Type2", "Food Mart"])
+store_type = st.selectbox("Store Type", ["Departmental Store", "Food Mart", "Supermarket Type1", "Supermarket Type2"])
 
-product_weight = st.number_input("Product Weight (kg)", 0.1, 50.0, 10.0)
+product_weight = st.number_input("Product Weight (kg)", 1.0, 50.0, 12.0)
 product_allocated_area = st.number_input("Product Allocated Area", 0.001, 1.0, 0.05, step=0.001)
 product_mrp = st.number_input("Product MRP", 1.0, 1000.0, 100.0)
-store_est_year = st.number_input("Store Establishment Year", 1950, 2025, 2005)
+store_est_year = st.number_input("Store Establishment Year", 1950, 2025, 2000)
 
 input_data = pd.DataFrame([{
     "Product_Weight": product_weight,
