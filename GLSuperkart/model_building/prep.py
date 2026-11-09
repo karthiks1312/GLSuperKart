@@ -5,8 +5,6 @@ import sklearn
 import os
 # for data preprocessing and pipeline creation
 from sklearn.model_selection import train_test_split
-# for converting text data in to numerical representation
-from sklearn.preprocessing import LabelEncoder
 # for hugging face space authentication to upload files
 from huggingface_hub import login, HfApi
 
@@ -39,21 +37,11 @@ print("SuperKart dataset loaded successfully")
 df.drop(columns=["Product_Id"], inplace=True)
 
 # ---------------------------
-# Encode categorical columns
+# Clean categorical values
+# (encoding is done by the OneHotEncoder inside the training pipeline,
+#  so the app can pass raw category names at inference time)
 # ---------------------------
-label_encoder = LabelEncoder()
-
-categorical_cols = [
-    "Product_Sugar_Content",
-    "Product_Type",
-    "Store_Id",
-    "Store_Size",
-    "Store_Location_City_Type",
-    "Store_Type"
-]
-
-for col in categorical_cols:
-    df[col] = label_encoder.fit_transform(df[col])
+df["Product_Sugar_Content"] = df["Product_Sugar_Content"].replace({"reg": "Regular"})
 
 # ---------------------------
 # Define target variable

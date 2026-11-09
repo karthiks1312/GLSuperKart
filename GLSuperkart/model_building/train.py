@@ -26,7 +26,8 @@ mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("MLOps_CICD_experiment")
 
 REPO_ID = os.getenv("HF_REPO_ID")
-PROJECT_NAME = os.getenv("PROJECT_NAME")
+PROJECT_NAME = os.getenv("REPO_NAME")
+DATASET_REPO_ID = f"{REPO_ID}/{PROJECT_NAME}"
 
 
 HF_TOKEN = os.getenv("HF_TOKEN")
@@ -34,22 +35,22 @@ api = HfApi(token=HF_TOKEN)
 
 
 Xtrain = pd.read_csv(hf_hub_download(
-        repo_id="karthiks969/GLSuperkart",
+        repo_id=DATASET_REPO_ID,
         filename="Xtrain.csv",
         repo_type="dataset"
     ))
 Xtest  = pd.read_csv(hf_hub_download(
-        repo_id="karthiks969/GLSuperkart",
+        repo_id=DATASET_REPO_ID,
         filename="Xtest.csv",
         repo_type="dataset"
     ))
 ytrain = pd.read_csv(hf_hub_download(
-        repo_id="karthiks969/GLSuperkart",
+        repo_id=DATASET_REPO_ID,
         filename="ytrain.csv",
         repo_type="dataset"
     ))
 ytest  = pd.read_csv(hf_hub_download(
-        repo_id="karthiks969/GLSuperkart",
+        repo_id=DATASET_REPO_ID,
         filename="ytest.csv",
         repo_type="dataset"
     ))
